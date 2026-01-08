@@ -1,0 +1,24 @@
+---
+- name: Create Azure VM
+  hosts: localhost
+  connection: local
+  vars:
+    resource_group: "test"
+    location: "West US 2"
+    vm_name: "AnsibleVM"
+    admin_username: "azureuser"
+    # It is better to use SSH keys, but for this example we use a password
+    admin_password: "Password1234!" 
+    vnet_name: "vnet_ansible"
+    subnet_name: "Subnet_ansible"
+
+  tasks:
+    - name: 2. Create Virtual Network
+      azure.azcollection.azure_rm_virtualnetwork:
+        resource_group: "{{ resource_group }}"
+        name: "{{ vnet_name }}"
+        address_prefixes: "10.0.0.0/16"
+        ad_user: "ing.gloriapalmagonzalez@gmail.com"
+        password: "paraprobar2025"
+
+        
