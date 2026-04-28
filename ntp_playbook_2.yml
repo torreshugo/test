@@ -1,0 +1,65 @@
+---
+- name: Collect Cisco router NTP status and compare with Ansible Controller time
+  hosts: cisco_routers
+  gather_facts: false
+  connection: network_cli
+
+  vars:
+    controller_timestamp: "{{ lookup('pipe', 'date \"+%Y-%m-%d %H:%M:%S %Z\"') }}"
+
+  tasks:
+
+    - name: Get router current clock
+      cisco.ios.ios_command:
+        commands:
+          - show clock
+      register: router_clock
+
+    - name: Get NTP association status
+      cisco.ios.ios_command:
+        commands:
+          - show ntp associations
+      register: ntp_associations
+
+    - name: Get NTP status
+      cisco.ios.ios_command:
+        commands:
+          - show ntp status
+      register: ntp_status
+
+    - name: Display consolidated time information
+      ansible.builtin.debug:
+        msg:
+          - "========================================="
+          - "Device: {{ inventory_hostname }}"
+          - "Ansible Controller Time: {{ controller_timestamp }}"
+          - "Router Clock:"
+          - "{{ router_clock.stdout[0] }}"
+          - "-----------------------------------------"
+          - "NTP Status:"
+          - "{{ ntp_status.stdout[0] }}"
+          - "-----------------------------------------"
+          - "NTP Associations:"
+          - "{{ ntp_associations.stdout[0] }}"
+          - "========================================="
+
+    - name: Save output to local report file
+      ansible.builtin.copy:
+        content: |
+          =========================================
+          Device: {{ inventory_hostname }}
+          Ansible Controller Time: {{ controller_timestamp }}
+
+          Router Clock:
+          {{ router_clock.stdout[0] }}
+
+          NTP Status:
+          {{ ntp_status.stdout[0] }}
+
+          NTP Associations:
+          {{ ntp_associations.stdout[0] }}
+
+          =========================================
+        dest: "./ntp_reports/{{ inventory_hostname }}_ntp_report.txt"
+      delegate_to: localhost
+
