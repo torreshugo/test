@@ -43,6 +43,11 @@
           - "{{ ntp_associations.stdout[0] }}"
           - "========================================="
 
+    - name: Create directory
+      ansible.builtin.file:
+        path: ./ntp_reports
+        state: directory        
+
     - name: Save output to local report file
       ansible.builtin.copy:
         content: |
