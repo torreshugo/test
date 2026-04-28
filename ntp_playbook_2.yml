@@ -1,6 +1,6 @@
 ---
 - name: Collect Cisco router NTP status and compare with Ansible Controller time
-  hosts: cisco_routers
+  hosts: cisco
   gather_facts: false
   connection: network_cli
 
