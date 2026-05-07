@@ -43,10 +43,14 @@
           - "{{ ntp_associations.stdout[0] }}"
           - "========================================="
 
-    - name: Create directory
+    - name: Create a directory if it does not exist
       ansible.builtin.file:
-        path: ./ntp_reports
-        state: directory        
+        path: /backup/
+        state: directory
+        mode: "755"
+      delegate_to: backup-server
+      become: true
+      run_once: true       
 
     - name: Save output to local report file
       ansible.builtin.copy:
@@ -66,24 +70,15 @@
 
           =========================================
         dest: "./ntp_reports/{{ inventory_hostname }}_ntp_report.txt"
-      delegate_to: backup-server 
-
-- name: Copy to controller
-  hosts: backup-server
-  gather_facts: false
-
-  tasks:
-    - name: Create a directory if it does not exist
-      ansible.builtin.file:
-        path: /backup/
-        state: directory
-        mode: "755"
       delegate_to: backup-server
       become: true
-      run_once: true
 
-    - name: copy files to managed host
+    - name: Save configuration to backup server
       ansible.builtin.copy:
-        src: ./ntp_reports/{{ inventory_hostname }}_ntp_report.txt
-        dest: /backup/
+        src: "./ntp_reports/{{ inventory_hostname }}_ntp_report.txt"
+        dest: "/backup/"
+        mode: "644"
+      become: true
+      delegate_to: backup-server
+  
 
