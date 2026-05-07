@@ -70,6 +70,6 @@
 
     - name: copy files to managed host
       ansible.builtin.copy:
-        src: ./ntp_reports/{{ inventory_hostname }}_ntp_report.txt
+        src: ./ntp_reports/
         dest: /home/student/
 
