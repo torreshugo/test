@@ -68,7 +68,7 @@
         dest: "./ntp_reports/{{ inventory_hostname }}_ntp_report.txt"
       delegate_to: localhost
 
-- name: Copy backup to host
+- name: Copy to controller
   hosts: ansible-1
   gather_facts: false
 
