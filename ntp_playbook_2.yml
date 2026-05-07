@@ -69,7 +69,7 @@
       delegate_to: localhost
 
 - name: Copy to controller
-  hosts: 18.220.35.139
+  hosts: student1.5h6t6.example.opentlc.com
   gather_facts: false
 
   tasks:
