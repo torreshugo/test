@@ -45,7 +45,7 @@
 
     - name: Create directory
       ansible.builtin.file:
-        path: ./ntp_reports
+        path: /tmp/ntp_reports
         state: directory        
 
     - name: Save output to local report file
@@ -84,6 +84,6 @@
 
     - name: copy files to managed host
       ansible.builtin.copy:
-        src: ./ntp_reports/{{ inventory_hostname }}_ntp_report.txt
+        src: /tmp/ntp_reports/{{ inventory_hostname }}_ntp_report.txt
         dest: /backup/
 
