@@ -88,4 +88,5 @@
       ansible.builtin.copy:
         src: /tmp/ntp_reports/
         dest: /backup/
+      become: true
 
