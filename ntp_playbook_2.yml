@@ -46,7 +46,9 @@
     - name: Create directory
       ansible.builtin.file:
         path: /tmp/ntp_reports
-        state: directory        
+        state: directory 
+      delegate_to: localhost
+      run_once: true  
 
     - name: Save output to local report file
       ansible.builtin.copy:
