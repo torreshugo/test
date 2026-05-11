@@ -67,7 +67,7 @@
           {{ ntp_associations.stdout[0] }}
 
           =========================================
-        dest: "./ntp_reports/{{ inventory_hostname }}_ntp_report.txt"
+        dest: "/tmp/ntp_reports/{{ inventory_hostname }}_ntp_report.txt"
       delegate_to: localhost 
 
 - name: Copy to controller
