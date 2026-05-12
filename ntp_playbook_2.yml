@@ -66,8 +66,12 @@
           {{ router_clock.stdout[0] }}
 
           NTP Status:
-          {{ ntp_status.stdout[0] }}
-
+          #{{ ntp_status.stdout[0] }}
+          {{
+            'SYNC STATUS: SYNCED'
+            if 'sync' in ntp_status.stdout[0] | lower
+            else 'SYNC STATUS: NOT SYNCED'
+          }}"
           NTP Associations:
           {{ ntp_associations.stdout[0] }}
 
