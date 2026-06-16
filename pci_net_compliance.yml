@@ -1,0 +1,129 @@
+---
+- name: Network Compliance Report
+  hosts: cisco_routers
+  gather_facts: false
+  connection: network_cli
+
+  vars:
+    report_dir: "/tmp/network_reports"
+
+  tasks:
+
+    - name: Get controller timestamp
+      delegate_to: localhost
+      ansible.builtin.command: date "+%Y-%m-%d %H:%M:%S %Z"
+      register: controller_time
+      changed_when: false
+
+    - name: Get user executing playbook
+      delegate_to: localhost
+      ansible.builtin.command: whoami
+      register: execution_user
+      changed_when: false
+
+    - name: Get router clock
+      cisco.ios.ios_command:
+        commands:
+          - show clock
+      register: router_clock
+
+    - name: Get NTP status
+      cisco.ios.ios_command:
+        commands:
+          - show ntp status
+      register: ntp_status
+
+    - name: Get NTP associations
+      cisco.ios.ios_command:
+        commands:
+          - show ntp associations
+      register: ntp_associations
+
+    - name: Get NAT configuration
+      cisco.ios.ios_command:
+        commands:
+          - show running-config | section ip nat
+      register: nat_config
+
+    - name: Get Anti-Spoofing Configuration
+      cisco.ios.ios_command:
+        commands:
+          - show running-config | include verify unicast
+          - show running-config | section access-list
+      register: antispoof_config
+
+    - name: Create report directory
+      delegate_to: localhost
+      ansible.builtin.file:
+        path: "{{ report_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: Generate compliance report
+      delegate_to: localhost
+      ansible.builtin.copy:
+        dest: "{{ report_dir }}/{{ inventory_hostname }}_compliance_report.txt"
+        content: |
+          ===========================================================
+          NETWORK COMPLIANCE REPORT
+          ===========================================================
+
+          Device: {{ inventory_hostname }}
+
+          Executed By:
+          {{ execution_user.stdout }}
+
+          Controller Timestamp:
+          {{ controller_time.stdout }}
+
+          Router Timestamp:
+          {{ router_clock.stdout[0] }}
+
+          ===========================================================
+          NTP STATUS
+          ===========================================================
+
+          {{ ntp_status.stdout[0] }}
+
+          ===========================================================
+          NTP ASSOCIATIONS
+          ===========================================================
+
+          {{ ntp_associations.stdout[0] }}
+
+          ===========================================================
+          NAT CONFIGURATION
+          ===========================================================
+
+          {{ nat_config.stdout[0] }}
+
+          ===========================================================
+          ANTI-SPOOFING CONFIGURATION
+          ===========================================================
+
+          uRPF Configuration:
+          {{ antispoof_config.stdout[0] }}
+
+          Access Lists:
+          {{ antispoof_config.stdout[1] }}
+
+          ===========================================================
+          END OF REPORT
+          ===========================================================
+
+    - name: Display report location
+      delegate_to: localhost
+      ansible.builtin.debug:
+        msg: "Report generated: {{ report_dir }}/{{ inventory_hostname }}_compliance_report.txt"
+
+    - name: Generate SHA256 checksum
+      delegate_to: localhost
+      ansible.builtin.command:
+        cmd: >
+          sha256sum
+          {{ report_dir }}/{{ inventory_hostname }}_compliance_report.txt
+      register: report_sha
+      changed_when: false    
+
+
+
