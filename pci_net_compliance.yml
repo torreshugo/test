@@ -1,6 +1,6 @@
 ---
 - name: Network Compliance Report
-  hosts: cisco_routers
+  hosts: cisco
   gather_facts: false
   connection: network_cli
 
