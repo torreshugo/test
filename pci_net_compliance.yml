@@ -123,7 +123,35 @@
           sha256sum
           {{ report_dir }}/{{ inventory_hostname }}_compliance_report.txt
       register: report_sha
-      changed_when: false    
+      changed_when: false 
+
+    - name: Append report hash
+      delegate_to: localhost
+      ansible.builtin.lineinfile:
+        path: "{{ report_dir }}/{{ inventory_hostname }}_compliance_report.txt"
+        insertafter: EOF
+        line: "SHA256: {{ report_sha.stdout.split()[0] }}"  
+
+- name: Copy to controller
+  hosts: backup-server
+  gather_facts: false
+
+  tasks:
+    - name: Create a directory if it does not exist
+      ansible.builtin.file:
+        path: /backup/
+        state: directory
+        mode: "755"
+      #delegate_to: backup-server
+      become: true
+      run_once: true
+
+    - name: copy files to managed host
+      ansible.builtin.copy:
+        src: /tmp/network_reports/
+        dest: /backup/
+      become: true
+      
 
 
 
