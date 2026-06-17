@@ -109,11 +109,14 @@
           Access Lists:
           {{ antispoof_config.stdout[1] }}
 
-          IP interface:
-          {{ antispoof_config.stdout[2] }}
-
           Runing interface:
-          {{ antispoof_config.stdout[3] }}
+          #{{ antispoof_config.stdout[2] }}
+
+          {{ antispoof_config.stdout[2] | regex_search('^(\\S+) is up', '\\1', multiline=True) | first }}
+
+          IP interface:
+          #{{ antispoof_config.stdout[3] }}
+          {{ antispoof_config.stdout[3] | regex_search('Internet address is ([0-9./]+)', '\\1') | first }}
 
           ===========================================================
           END OF REPORT
