@@ -50,9 +50,12 @@
         commands:
           - show running-config | include verify unicast
           - show running-config | section access-list
-          - show run interface  
-          - show ip interface GigabitEthernet1  
+          - show ip interface brief   
       register: antispoof_config
+
+    - name: Setting facts
+        set_fact:
+          gig_interface: "{{ antispoof_config.stdout[2].split('\n') | select('match', '^GigabitEthernet') | first }}"  
 
     - name: Create report directory
       delegate_to: localhost
@@ -112,11 +115,11 @@
           Runing interface:
           #{{ antispoof_config.stdout[2] }}
 
-          {{ antispoof_config.stdout[2] | regex_search('^(\\S+) is up', '\\1', multiline=True) | first }}
-
+          {{ gig_interface.split()[0] }}
           IP interface:
           #{{ antispoof_config.stdout[3] }}
-          {{ antispoof_config.stdout[3] | regex_search('Internet address is ([0-9./]+)', '\\1') | first }}
+          
+          {{ gig_interface.split()[1] }}
 
           ===========================================================
           END OF REPORT
