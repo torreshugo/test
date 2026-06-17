@@ -116,6 +116,9 @@
           Access Lists:
           {{ antispoof_config.stdout[1] }}
 
+          Running Inrerface:
+          {{ gig_interface.split()[0] }}
+
           ===========================================================
           END OF REPORT
           ===========================================================
