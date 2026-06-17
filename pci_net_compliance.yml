@@ -50,8 +50,8 @@
         commands:
           - show running-config | include verify unicast
           - show running-config | section access-list
-          - show ip interface
           - show run interface  
+          - show ip interface GigabitEthernet1  
       register: antispoof_config
 
     - name: Create report directory
