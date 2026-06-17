@@ -116,11 +116,6 @@
           Access Lists:
           {{ antispoof_config.stdout[1] }}
 
-          Runing interface:
-          #{{ antispoof_config.stdout[2] }}
-          IP interface:
-          #{{ antispoof_config.stdout[3] }}
-
           ===========================================================
           END OF REPORT
           ===========================================================
