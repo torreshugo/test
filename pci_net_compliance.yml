@@ -50,6 +50,8 @@
         commands:
           - show running-config | include verify unicast
           - show running-config | section access-list
+          - show ip interface
+          - show run interace  
       register: antispoof_config
 
     - name: Create report directory
@@ -106,6 +108,12 @@
 
           Access Lists:
           {{ antispoof_config.stdout[1] }}
+
+          IP interface:
+          {{ antispoof_config.stdout[2] }}
+
+          Runing interface:
+          {{ antispoof_config.stdout[3] }}
 
           ===========================================================
           END OF REPORT
