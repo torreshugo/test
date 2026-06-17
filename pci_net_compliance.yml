@@ -59,7 +59,7 @@
 
     - name: debug
       ansible.builtin.debug:
-        var: "{{ gig_interface.split()[0] }}"     
+        var: "{{ gig_interface }}"     
 
     - name: Create report directory
       delegate_to: localhost
@@ -118,11 +118,9 @@
 
           Runing interface:
           #{{ antispoof_config.stdout[2] }}
-
           {{ gig_interface.split()[0] }}
           IP interface:
           #{{ antispoof_config.stdout[3] }}
-          
           {{ gig_interface.split()[1] }}
 
           ===========================================================
