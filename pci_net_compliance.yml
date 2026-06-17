@@ -57,6 +57,9 @@
       ansible.builtin.set_fact:
         gig_interface: "{{ antispoof_config.stdout[2].split('\n') | select('match', '^GigabitEthernet') | first }}"  
 
+    - name: debug:
+        msg: gig_interface     
+
     - name: Create report directory
       delegate_to: localhost
       ansible.builtin.file:
