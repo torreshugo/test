@@ -54,8 +54,8 @@
       register: antispoof_config
 
     - name: Setting facts
-        set_fact:
-          gig_interface: "{{ antispoof_config.stdout[2].split('\n') | select('match', '^GigabitEthernet') | first }}"  
+      ansible.builtin.set_fact:
+        gig_interface: "{{ antispoof_config.stdout[2].split('\n') | select('match', '^GigabitEthernet') | first }}"  
 
     - name: Create report directory
       delegate_to: localhost
