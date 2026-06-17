@@ -59,7 +59,7 @@
 
     - name: debug
       ansible.builtin.debug:
-        msg: gig_interface     
+        var: "{{ gig_interface.split()[0] }}"     
 
     - name: Create report directory
       delegate_to: localhost
