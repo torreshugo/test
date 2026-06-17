@@ -51,7 +51,7 @@
           - show running-config | include verify unicast
           - show running-config | section access-list
           - show ip interface
-          - show run interace  
+          - show run interface  
       register: antispoof_config
 
     - name: Create report directory
