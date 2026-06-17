@@ -118,7 +118,6 @@
 
           Runing interface:
           #{{ antispoof_config.stdout[2] }}
-          {{ gig_interface.split()[0] }}
           IP interface:
           #{{ antispoof_config.stdout[3] }}
 
