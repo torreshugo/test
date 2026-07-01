@@ -1,0 +1,116 @@
+===============================================================================
+                    REPORTE DE AUDITORÍA PCI DSS
+===============================================================================
+
+Fecha de generación: {{ controller_time.stdout }}
+
+Dispositivo auditado: {{ inventory_hostname }}
+
+===============================================================================
+1.0 APARTADO DE SINCRONÍA
+===============================================================================
+
+El dispositivo debe contar con sincronía hacia un servidor NTP.
+
+Se ejecutan comandos para determinar la sincronía con el servidor NTP. Como
+evidencia se presenta la fecha del dispositivo de red y la fecha del controlador
+de automatización (Ansible Automation Platform) para demostrar que ambos se
+encuentran sincronizados.
+
+------------------------------------------------------------------------------
+EVIDENCIA
+------------------------------------------------------------------------------
+
+Dispositivo:
+    {{ inventory_hostname }}
+
+Ejecutado por:
+    {{ execution_user.stdout }}
+
+Fecha y hora del Controlador:
+    {{ controller_time.stdout }}
+
+Fecha y hora del Router:
+    {{ router_clock.stdout[0] }}
+
+==============================================================================
+ESTADO DEL SERVIDOR NTP
+==============================================================================
+
+{{ ntp_status.stdout[0] }}
+
+==============================================================================
+ASOCIACIONES NTP
+==============================================================================
+
+{{ ntp_associations.stdout[0] }}
+
+
+
+
+
+
+
+===============================================================================
+2.0 MEDIDAS DE SEGURIDAD ANTI-SPOOFING
+===============================================================================
+
+Los controles de anti-spoofing constituyen una medida fundamental para prevenir
+la suplantación de identidad en redes, aplicaciones y servicios críticos. Su
+implementación permite validar la autenticidad de las comunicaciones y bloquear
+intentos de falsificación de direcciones IP, nombres de dominio, correos
+electrónicos y otros identificadores utilizados en las transacciones
+electrónicas.
+
+------------------------------------------------------------------------------
+EVIDENCIA
+------------------------------------------------------------------------------
+
+Configuración uRPF
+
+{{ antispoof_config.stdout[0] }}
+
+------------------------------------------------------------------------------
+
+Listas de Control de Acceso (ACL)
+
+{{ antispoof_config.stdout[1] }}
+
+------------------------------------------------------------------------------
+
+Interfaz configurada
+
+{{ gig_interface.split()[0] }}
+
+Dirección IP de la interfaz
+
+{{ gig_interface.split()[1] }}
+
+
+
+
+
+
+
+===============================================================================
+3.0 NETWORK ADDRESS TRANSLATION (NAT)
+===============================================================================
+
+Como buena práctica, NAT debe complementarse con firewalls, listas de control
+de acceso (ACL) y mecanismos de monitoreo para fortalecer la protección de los
+servicios y cumplir con los requisitos de seguridad establecidos por marcos
+regulatorios como PCI DSS.
+
+------------------------------------------------------------------------------
+EVIDENCIA
+------------------------------------------------------------------------------
+
+Configuración NAT
+
+{{ nat_config.stdout[0] }}
+
+===============================================================================
+                      FIN DEL REPORTE DE AUDITORÍA
+===============================================================================
+
+
